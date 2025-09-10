@@ -63,7 +63,7 @@ const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium">
+                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-background">
                   <Coins className="mr-2 h-4 w-4" />
                   资产代币化
                 </NavigationMenuTrigger>
@@ -89,7 +89,7 @@ const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium">
+                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-background">
                   <TrendingUp className="mr-2 h-4 w-4" />
                   代币证券化
                 </NavigationMenuTrigger>
@@ -109,7 +109,7 @@ const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium">
+                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-background">
                   <MoreHorizontal className="mr-2 h-4 w-4" />
                   更多
                 </NavigationMenuTrigger>
