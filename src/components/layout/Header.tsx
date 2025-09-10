@@ -67,7 +67,7 @@ const Header = () => {
                   <Coins className="mr-2 h-4 w-4" />
                   资产代币化
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="left-0 top-full bg-background shadow-lg border">
+                <NavigationMenuContent>
                   <ul className="grid w-[300px] gap-3 p-4">
                     <ListItem href="/tokenization/stablecoins" title="稳定币">
                       稳定币市场数据与分析
@@ -93,7 +93,7 @@ const Header = () => {
                   <TrendingUp className="mr-2 h-4 w-4" />
                   代币证券化
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="left-0 top-full bg-background shadow-lg border">
+                <NavigationMenuContent>
                   <ul className="grid w-[280px] gap-3 p-4">
                     <ListItem href="/securitization/etf" title="ETF">
                       交易所交易基金产品
@@ -113,7 +113,7 @@ const Header = () => {
                   <MoreHorizontal className="mr-2 h-4 w-4" />
                   更多
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="left-0 top-full bg-background shadow-lg border">
+                <NavigationMenuContent>
                   <ul className="grid w-[250px] gap-3 p-4">
                     <ListItem href="/more/research" title="研报">
                       行业研究报告
