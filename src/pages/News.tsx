@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '@/components/layout/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -113,7 +114,9 @@ const News = () => {
   const categories = ['all', '监管', '房地产', '稳定币', 'ETF', '商品', '市场'];
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">
         <div>
           <h1 className="financial-title mb-2">RWA快讯</h1>
@@ -262,6 +265,7 @@ const News = () => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

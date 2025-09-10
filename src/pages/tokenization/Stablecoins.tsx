@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from '@/components/layout/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -114,7 +115,9 @@ const getStatusText = (status: string) => {
 
 const Stablecoins = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">
         <div>
           <h1 className="financial-title mb-2">稳定币市场</h1>
@@ -332,6 +335,7 @@ const Stablecoins = () => {
           </CardContent>
         </Card>
       </div>
+    </div>
     </div>
   );
 };
