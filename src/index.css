@@ -44,6 +44,9 @@
     --warning-foreground: 0 0% 100%;
     --info: 213 94% 54%;
     --info-foreground: 0 0% 100%;
+    
+    /* Highlight background */
+    --highlight-bg: 220 100% 95%;
 
     /* Chart colors */
     --chart-primary: 213 94% 54%;

@@ -35,7 +35,7 @@ const quarterlyPerformance = [
 const MarketOverview = () => {
   return (
     <div className="space-y-6">
-      <div>
+      <div className="bg-highlight-bg p-6 rounded-lg">
         <h1 className="financial-title mb-2">RWA市场概览</h1>
         <p className="text-muted-foreground">香港地区实物资产代币化市场的全面洞察</p>
       </div>

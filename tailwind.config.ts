@@ -60,6 +60,9 @@ export default {
           DEFAULT: "hsl(var(--info))",
           foreground: "hsl(var(--info-foreground))",
         },
+        highlight: {
+          bg: "hsl(var(--highlight-bg))",
+        },
         chart: {
           1: "hsl(var(--chart-primary))",
           2: "hsl(var(--chart-secondary))",
