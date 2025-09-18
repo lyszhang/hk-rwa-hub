@@ -8,8 +8,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { ChevronDown, MessageSquare, Newspaper, Coins, TrendingUp, MoreHorizontal } from 'lucide-react';
+import { ChevronDown, MessageSquare, Newspaper, Coins, TrendingUp, Building2 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   return (
@@ -18,9 +24,9 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">R</span>
+              <span className="text-primary-foreground font-bold text-lg">C</span>
             </div>
-            <span className="financial-subtitle text-primary">RWA HK Insights</span>
+            <span className="financial-subtitle text-primary">Creda Insights</span>
           </Link>
 
           <NavigationMenu>
@@ -63,69 +69,103 @@ const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-background">
-                  <Coins className="mr-2 h-4 w-4" />
-                  资产代币化
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[300px] gap-3 p-4">
-                    <ListItem href="/tokenization/stablecoins" title="稳定币">
-                      稳定币市场数据与分析
-                    </ListItem>
-                    <ListItem href="/tokenization/bonds" title="债券">
-                      债券代币化项目追踪
-                    </ListItem>
-                    <ListItem href="/tokenization/funds" title="基金">
-                      基金代币化产品概览
-                    </ListItem>
-                    <ListItem href="/tokenization/stocks" title="股票">
-                      股票代币化市场动态
-                    </ListItem>
-                    <ListItem href="/tokenization/commodities" title="大宗商品">
-                      商品代币化交易数据
-                    </ListItem>
-                  </ul>
-                </NavigationMenuContent>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="group inline-flex h-10 items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-background hover:text-accent-foreground focus:bg-background focus:text-accent-foreground">
+                      <Building2 className="mr-2 h-4 w-4" />
+                      香港专区
+                      <ChevronDown className="ml-1 h-4 w-4 opacity-60" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start" className="w-48 p-2 rounded-lg border shadow-md bg-background">
+                    <DropdownMenuItem asChild>
+                      <Link to="/hk/securitization" className="w-full cursor-pointer rounded-md px-2 py-2 font-semibold text-foreground bg-accent/40 hover:bg-accent hover:text-accent-foreground transition-colors">
+                        证券代币化
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/hk/stablecoins" className="w-full cursor-pointer rounded-md px-2 py-2 font-semibold text-foreground bg-accent/40 hover:bg-accent hover:text-accent-foreground transition-colors">
+                        稳定币
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/hk/real-assets" className="w-full cursor-pointer rounded-md px-2 py-2 text-muted-foreground opacity-70 hover:opacity-100 hover:text-accent-foreground hover:bg-accent transition-colors">
+                        实物代币化
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-background">
-                  <TrendingUp className="mr-2 h-4 w-4" />
-                  代币证券化
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[280px] gap-3 p-4">
-                    <ListItem href="/securitization/etf" title="ETF">
-                      交易所交易基金产品
-                    </ListItem>
-                    <ListItem href="/securitization/dats" title="DATs">
-                      数字资产交易系统
-                    </ListItem>
-                    <ListItem href="/securitization/crypto-companies" title="Crypto业务上市公司">
-                      加密货币相关公司分析
-                    </ListItem>
-                  </ul>
-                </NavigationMenuContent>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="group inline-flex h-10 items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-background hover:text-accent-foreground focus:bg-background focus:text-accent-foreground">
+                      <Coins className="mr-2 h-4 w-4" />
+                      资产代币化
+                      <ChevronDown className="ml-1 h-4 w-4 opacity-60" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start" className="w-48 p-2 rounded-lg border shadow-md bg-background">
+                    <DropdownMenuItem asChild>
+                      <Link to="/tokenization/stocks" className="w-full cursor-pointer rounded-md px-2 py-2 font-semibold text-foreground bg-accent/40 hover:bg-accent hover:text-accent-foreground transition-colors">股票</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/tokenization/funds" className="w-full cursor-pointer rounded-md px-2 py-2 text-muted-foreground opacity-70 hover:opacity-100 hover:text-accent-foreground hover:bg-accent transition-colors">基金</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/tokenization/bonds" className="w-full cursor-pointer rounded-md px-2 py-2 text-muted-foreground opacity-70 hover:opacity-100 hover:text-accent-foreground hover:bg-accent transition-colors">债券</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/tokenization/commodities" className="w-full cursor-pointer rounded-md px-2 py-2 text-muted-foreground opacity-70 hover:opacity-100 hover:text-accent-foreground hover:bg-accent transition-colors">大宗商品</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-background">
-                  <MoreHorizontal className="mr-2 h-4 w-4" />
-                  更多
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[250px] gap-3 p-4">
-                    <ListItem href="/more/research" title="研报">
-                      行业研究报告
-                    </ListItem>
-                    <ListItem href="/more/audit" title="合约审计">
-                      智能合约安全审计
-                    </ListItem>
-                    <ListItem href="/more/technology" title="代币化技术">
-                      技术解决方案与创新
-                    </ListItem>
-                  </ul>
-                </NavigationMenuContent>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="group inline-flex h-10 items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-background hover:text-accent-foreground focus:bg-background focus:text-accent-foreground">
+                      <TrendingUp className="mr-2 h-4 w-4" />
+                      代币证券化
+                      <ChevronDown className="ml-1 h-4 w-4 opacity-60" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start" className="w-48 p-2 rounded-lg border shadow-md bg-background">
+                    <DropdownMenuItem asChild>
+                      <Link to="/securitization/dats" className="w-full cursor-pointer rounded-md px-2 py-2 font-semibold text-foreground bg-accent/40 hover:bg-accent hover:text-accent-foreground transition-colors">DATs</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/securitization/etf" className="w-full cursor-pointer rounded-md px-2 py-2 text-muted-foreground opacity-70 hover:opacity-100 hover:text-accent-foreground hover:bg-accent transition-colors">ETF</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/securitization/crypto-companies" className="w-full cursor-pointer rounded-md px-2 py-2 text-muted-foreground opacity-70 hover:opacity-100 hover:text-accent-foreground hover:bg-accent transition-colors">Crypto上市公司</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="group inline-flex h-10 items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-background hover:text-accent-foreground focus:bg-background focus:text-accent-foreground">
+                      更多
+                      <ChevronDown className="ml-1 h-4 w-4 opacity-60" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start" className="w-48 p-2 rounded-lg border shadow-md bg-background">
+                    <DropdownMenuItem asChild>
+                      <Link to="/more/research" className="w-full cursor-pointer rounded-md px-2 py-2 hover:bg-accent hover:text-accent-foreground transition-colors">研报</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/more/audit" className="w-full cursor-pointer rounded-md px-2 py-2 hover:bg-accent hover:text-accent-foreground transition-colors">合约审计</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/more/technology" className="w-full cursor-pointer rounded-md px-2 py-2 hover:bg-accent hover:text-accent-foreground transition-colors">代币化技术</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
