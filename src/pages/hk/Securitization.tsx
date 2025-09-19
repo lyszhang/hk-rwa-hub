@@ -75,9 +75,9 @@ const statisticsData = {
     changeType: 'decrease'
   },
   marketCap: {
-    value: 89.3,
-    unit: '亿美元',
-    change: 15.7,
+    value: 1.2,
+    unit: '万个',
+    change: 8.3,
     changeType: 'increase'
   }
 };
@@ -722,7 +722,7 @@ const Securitization = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">市值</p>
+                  <p className="text-sm font-medium text-gray-600">持仓地址</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {statisticsData.marketCap.value}
                     <span className="text-lg text-gray-500 ml-1">{statisticsData.marketCap.unit}</span>

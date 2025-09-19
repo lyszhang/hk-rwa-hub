@@ -193,11 +193,11 @@ const productData = {
         license: 'MIT'
       },
       onChainMetrics: {
-        totalValueLocked: 250000000, // USD
-        dailyVolume: 15000000, // USD
-        marketCap: 250000000, // USD
-        priceChange24h: 0.15, // %
-        liquidity: 45000000 // USD
+        totalValue: 250000000, // USD
+        dailySubscription: 15000000, // USD
+        dailyRedemption: 12000000, // USD
+        holderAddresses: 12500, // 个
+        priceChange24h: 0.15 // %
       },
       recentTransactions: [
         {
@@ -992,30 +992,30 @@ const ProductDetail = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-blue-50 rounded-lg">
                       <DollarSign className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600">总锁定价值</p>
+                      <p className="text-sm text-gray-600">总价值</p>
                       <p className="text-lg font-bold text-blue-600">
-                        ${(product.blockchain.onChainMetrics.totalValueLocked / 1000000).toFixed(1)}M
+                        ${(product.blockchain.onChainMetrics.totalValue / 1000000).toFixed(1)}M
                       </p>
                     </div>
                     <div className="text-center p-4 bg-green-50 rounded-lg">
                       <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600">日交易量</p>
+                      <p className="text-sm text-gray-600">当日申购量</p>
                       <p className="text-lg font-bold text-green-600">
-                        ${(product.blockchain.onChainMetrics.dailyVolume / 1000000).toFixed(1)}M
+                        ${(product.blockchain.onChainMetrics.dailySubscription / 1000000).toFixed(1)}M
+                      </p>
+                    </div>
+                    <div className="text-center p-4 bg-red-50 rounded-lg">
+                      <TrendingDown className="w-6 h-6 text-red-600 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">当日赎回量</p>
+                      <p className="text-lg font-bold text-red-600">
+                        ${(product.blockchain.onChainMetrics.dailyRedemption / 1000000).toFixed(1)}M
                       </p>
                     </div>
                     <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <BarChart3 className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600">市值</p>
+                      <Users className="w-6 h-6 text-purple-600 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">持仓地址</p>
                       <p className="text-lg font-bold text-purple-600">
-                        ${(product.blockchain.onChainMetrics.marketCap / 1000000).toFixed(1)}M
-                      </p>
-                    </div>
-                    <div className="text-center p-4 bg-orange-50 rounded-lg">
-                      <Zap className="w-6 h-6 text-orange-600 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600">流动性</p>
-                      <p className="text-lg font-bold text-orange-600">
-                        ${(product.blockchain.onChainMetrics.liquidity / 1000000).toFixed(1)}M
+                        {product.blockchain.onChainMetrics.holderAddresses.toLocaleString()}个
                       </p>
                     </div>
                   </div>
@@ -1127,28 +1127,6 @@ const ProductDetail = () => {
               </CardContent>
             </Card>
 
-            {/* 区块浏览器链接 */}
-            <Card>
-              <CardHeader>
-                <CardTitle>区块浏览器</CardTitle>
-                <CardDescription>在区块浏览器中查看详细信息</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <Database className="w-6 h-6 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Etherscan</p>
-                      <p className="text-sm text-gray-600">查看合约详情和交易记录</p>
-                    </div>
-                  </div>
-                  <Button variant="outline">
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    打开链接
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
 
         </Tabs>

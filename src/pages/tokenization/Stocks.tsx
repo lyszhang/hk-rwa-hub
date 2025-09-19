@@ -12,179 +12,338 @@ import {
   Search, 
   BarChart3,
   DollarSign,
-  Activity
+  Activity,
+  Users,
+  ExternalLink,
+  Copy
 } from 'lucide-react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip as ChartTooltip,
+  Legend,
+  Filler,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+// 注册 Chart.js 组件
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  ChartTooltip,
+  Legend,
+  Filler
+);
 
 const Stocks = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('market_cap');
+  const [sortBy, setSortBy] = useState('totalValue');
+  const [filterBy, setFilterBy] = useState('all');
+  const [blockchainFilter, setBlockchainFilter] = useState('all');
 
-  // 代币化股票数据（参考 CoinGecko 数据）
+  // 股票代币化数据（参考 RWA.xyz 数据）
   const tokenizedStocks = [
     {
       id: 1,
-      name: 'Tesla',
-      symbol: 'TSLA',
-      tokenSymbol: 'TSLA',
-      price: 248.50,
-      change24h: 2.34,
-      change7d: -5.67,
-      change30d: 12.45,
-      volume24h: 1250000000,
-      marketCap: 789000000000,
-      category: 'Technology',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'backed.fi',
-      description: 'Tesla Inc. 代币化股票'
+      name: 'Tesla (Ondo Tokenized)',
+      ticker: 'TSLAon',
+      platform: 'Ondo',
+      networks: ['Ethereum'],
+      totalValue: 3643965,
+      underlyingAsset: 'Tesla Inc. DL - 001',
+      nav: 429,
+      holders: 212,
+      monthlyTransferVolume: 3612939,
+      issuer: 'Ondo Global Markets (BVI) Limited',
+      domicile: 'British Virgin Islands',
+      regulatoryFramework: 'U.S. Securities Act Reg. S Exemption',
+      custodian: 'Alpaca Securities LLC',
+      subscriptionFees: '0%',
+      redemptionFees: '0%',
+      monthlyTransferCount: 4425,
+      activeAddresses: 104,
+      contractAddress: '0xf6b1117ec07684d3958cad8beb1b302bfd21103f',
+      change30d: 12.45
     },
     {
       id: 2,
-      name: 'Apple',
-      symbol: 'AAPL',
-      tokenSymbol: 'AAPL',
-      price: 189.25,
-      change24h: -1.23,
-      change7d: 3.45,
-      change30d: 8.92,
-      volume24h: 890000000,
-      marketCap: 2950000000000,
-      category: 'Technology',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'ondo.fi',
-      description: 'Apple Inc. 代币化股票'
+      name: 'SPDR S&P 500 ETF (Ondo Tokenized)',
+      ticker: 'SPYon',
+      platform: 'Ondo',
+      networks: ['Ethereum'],
+      totalValue: 19775229,
+      underlyingAsset: 'SPDR S&P 500 ETF Trust',
+      nav: 661,
+      holders: 186,
+      monthlyTransferVolume: 4607909,
+      issuer: 'Ondo Global Markets (BVI) Limited',
+      domicile: 'British Virgin Islands',
+      regulatoryFramework: 'U.S. Securities Act Reg. S Exemption',
+      custodian: 'Alpaca Securities LLC',
+      subscriptionFees: '0%',
+      redemptionFees: '0%',
+      monthlyTransferCount: 2612,
+      activeAddresses: 70,
+      contractAddress: '0x1234567890abcdef1234567890abcdef12345678',
+      change30d: 6.78
     },
     {
       id: 3,
-      name: 'Microsoft',
-      symbol: 'MSFT',
-      tokenSymbol: 'MSFT',
-      price: 378.85,
-      change24h: 0.87,
-      change7d: -2.15,
-      change30d: 6.78,
-      volume24h: 650000000,
-      marketCap: 2810000000000,
-      category: 'Technology',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'dinari',
-      description: 'Microsoft Corporation 代币化股票'
+      name: 'Backed CSPX Core S&P 500',
+      ticker: 'bCSPX',
+      platform: 'Backed Finance (xStocks)',
+      networks: ['Gnosis', 'Ethereum', 'Avalanche'],
+      totalValue: 3623092,
+      underlyingAsset: 'iShares Core S&P 500 UCITS ETF',
+      nav: 704,
+      holders: 597,
+      monthlyTransferVolume: 7195878,
+      issuer: 'Backed Assets GmbH',
+      domicile: 'Switzerland',
+      regulatoryFramework: 'Switzerland DLT Act',
+      custodian: 'InCore Bank AG',
+      subscriptionFees: '0.20%',
+      redemptionFees: '0.20%',
+      monthlyTransferCount: 946,
+      activeAddresses: 106,
+      contractAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
+      change30d: 4.56
     },
     {
       id: 4,
-      name: 'Amazon',
-      symbol: 'AMZN',
-      tokenSymbol: 'AMZN',
-      price: 145.67,
-      change24h: -0.45,
-      change7d: 1.89,
-      change30d: 4.56,
-      volume24h: 420000000,
-      marketCap: 1520000000000,
-      category: 'Technology',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'backed.fi',
-      description: 'Amazon.com Inc. 代币化股票'
+      name: 'Alphabet xStock',
+      ticker: 'GOOGLx',
+      platform: 'Backed Finance (xStocks)',
+      networks: ['Solana'],
+      totalValue: 3197653,
+      underlyingAsset: 'Alphabet Inc. Class A',
+      nav: 250,
+      holders: 3976,
+      monthlyTransferVolume: 9474847,
+      issuer: 'Backed Assets GmbH',
+      domicile: 'Switzerland',
+      regulatoryFramework: 'Switzerland DLT Act',
+      custodian: 'InCore Bank AG',
+      subscriptionFees: '0%',
+      redemptionFees: '0%',
+      monthlyTransferCount: 36811,
+      activeAddresses: 1191,
+      contractAddress: 'XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN',
+      change30d: 9.87
     },
     {
       id: 5,
-      name: 'Google',
-      symbol: 'GOOGL',
-      tokenSymbol: 'GOOGL',
-      price: 142.30,
-      change24h: 1.56,
-      change7d: -1.23,
-      change30d: 9.87,
-      volume24h: 380000000,
-      marketCap: 1780000000000,
-      category: 'Technology',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'ondo.fi',
-      description: 'Alphabet Inc. Class A 代币化股票'
+      name: 'iShares Silver Trust (Ondo Tokenized)',
+      ticker: 'SLVon',
+      platform: 'Ondo',
+      networks: ['Ethereum'],
+      totalValue: 3099022,
+      underlyingAsset: 'iShares Silver Trust',
+      nav: 37.98,
+      holders: 28,
+      monthlyTransferVolume: 966992,
+      issuer: 'Ondo Global Markets (BVI) Limited',
+      domicile: 'British Virgin Islands',
+      regulatoryFramework: 'U.S. Securities Act Reg. S Exemption',
+      custodian: 'Alpaca Securities LLC',
+      subscriptionFees: '0%',
+      redemptionFees: '0%',
+      monthlyTransferCount: 325,
+      activeAddresses: 18,
+      contractAddress: '0xf3e4872e6a4cf365888d93b6146a2baa7348f1a4',
+      change30d: 15.43
     },
     {
       id: 6,
-      name: 'Meta',
-      symbol: 'META',
-      tokenSymbol: 'META',
-      price: 485.20,
-      change24h: 3.21,
-      change7d: 5.67,
-      change30d: 15.43,
-      volume24h: 290000000,
-      marketCap: 1230000000000,
-      category: 'Technology',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'dinari',
-      description: 'Meta Platforms Inc. 代币化股票'
-    },
-    {
-      id: 7,
-      name: 'NVIDIA',
-      symbol: 'NVDA',
-      tokenSymbol: 'NVDA',
-      price: 875.28,
-      change24h: -2.15,
-      change7d: 8.92,
-      change30d: 25.67,
-      volume24h: 450000000,
-      marketCap: 2150000000000,
-      category: 'Technology',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'backed.fi',
-      description: 'NVIDIA Corporation 代币化股票'
-    },
-    {
-      id: 8,
-      name: 'Netflix',
-      symbol: 'NFLX',
-      tokenSymbol: 'NFLX',
-      price: 485.50,
-      change24h: 0.78,
-      change7d: -3.45,
-      change30d: 7.89,
-      volume24h: 180000000,
-      marketCap: 215000000000,
-      category: 'Technology',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'ondo.fi',
-      description: 'Netflix Inc. 代币化股票'
-    },
-    {
-      id: 9,
-      name: 'PayPal',
-      symbol: 'PYPL',
-      tokenSymbol: 'PYPL',
-      price: 58.90,
-      change24h: -1.45,
-      change7d: 2.34,
-      change30d: -5.67,
-      volume24h: 120000000,
-      marketCap: 68000000000,
-      category: 'Financial',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'dinari',
-      description: 'PayPal Holdings Inc. 代币化股票'
-    },
-    {
-      id: 10,
-      name: 'Square',
-      symbol: 'SQ',
-      tokenSymbol: 'SQ',
-      price: 45.67,
-      change24h: 2.89,
-      change7d: -1.23,
-      change30d: 3.45,
-      volume24h: 95000000,
-      marketCap: 28000000000,
-      category: 'Financial',
-      exchanges: ['Uniswap', 'SushiSwap', '1inch'],
-      issuer: 'backed.fi',
-      description: 'Block Inc. 代币化股票'
+      name: 'Backed Coinbase',
+      ticker: 'bCOIN',
+      platform: 'Backed Finance (xStocks)',
+      networks: ['Gnosis', 'Ethereum'],
+      totalValue: 3231325,
+      underlyingAsset: 'Coinbase Global Inc - Class A',
+      nav: 321,
+      holders: 47,
+      monthlyTransferVolume: 49164,
+      issuer: 'Backed Assets GmbH',
+      domicile: 'Switzerland',
+      regulatoryFramework: 'Switzerland DLT Act',
+      custodian: 'InCore Bank AG',
+      subscriptionFees: '0.20%',
+      redemptionFees: '0.20%',
+      monthlyTransferCount: 1,
+      activeAddresses: 7,
+      contractAddress: '0x2222222222222222222222222222222222222222',
+      change30d: 25.67
     }
   ];
 
-  // 格式化数字
+  // 平台统计数据
+  const platformStats = [
+    { platform: 'Ondo', count: 3, totalValue: 26513216, marketShare: 46.9 },
+    { platform: 'Backed Finance (xStocks)', count: 3, totalValue: 10052070, marketShare: 17.8 },
+    { platform: 'Securitize', count: 1, totalValue: 253736400, marketShare: 44.9 },
+    { platform: 'Dinari', count: 85, totalValue: 3200000, marketShare: 0.6 },
+    { platform: 'Swarm', count: 8, totalValue: 900000, marketShare: 0.2 }
+  ];
+
+  // 股票代币化月度趋势数据
+  const monthlyTrendData = [
+    { month: '2024-01', Ondo: 120, Backed: 85, Securitize: 95 },
+    { month: '2024-02', Ondo: 135, Backed: 92, Securitize: 108 },
+    { month: '2024-03', Ondo: 148, Backed: 105, Securitize: 125 },
+    { month: '2024-04', Ondo: 162, Backed: 118, Securitize: 142 },
+    { month: '2024-05', Ondo: 175, Backed: 132, Securitize: 158 },
+    { month: '2024-06', Ondo: 188, Backed: 145, Securitize: 172 },
+    { month: '2024-07', Ondo: 202, Backed: 158, Securitize: 185 },
+    { month: '2024-08', Ondo: 215, Backed: 172, Securitize: 198 },
+    { month: '2024-09', Ondo: 228, Backed: 185, Securitize: 212 },
+  ];
+
+  // Chart.js 配置
+  const chartData = {
+    labels: monthlyTrendData.map(item => item.month),
+    datasets: [
+      {
+        label: 'Ondo',
+        data: monthlyTrendData.map(item => item.Ondo),
+        borderColor: 'rgb(168, 85, 247)',
+        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: 'rgb(168, 85, 247)',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: 'rgb(168, 85, 247)',
+        pointHoverBorderColor: '#ffffff',
+        pointHoverBorderWidth: 2,
+      },
+      {
+        label: 'Backed Finance',
+        data: monthlyTrendData.map(item => item.Backed),
+        borderColor: 'rgb(16, 185, 129)',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: 'rgb(16, 185, 129)',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: 'rgb(16, 185, 129)',
+        pointHoverBorderColor: '#ffffff',
+        pointHoverBorderWidth: 2,
+      },
+      {
+        label: 'Securitize',
+        data: monthlyTrendData.map(item => item.Securitize),
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: 'rgb(59, 130, 246)',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: 'rgb(59, 130, 246)',
+        pointHoverBorderColor: '#ffffff',
+        pointHoverBorderWidth: 2,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
+    plugins: {
+      legend: {
+        position: 'top' as const,
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+            weight: 'normal' as const,
+          },
+        },
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: true,
+        callbacks: {
+          label: function(context: any) {
+            return `${context.dataset.label}: $${context.parsed.y}M`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          text: '月份',
+          font: {
+            size: 12,
+            weight: 'normal' as const,
+          },
+        },
+        grid: {
+          display: false,
+        },
+        ticks: {
+          font: {
+            size: 11,
+          },
+        },
+      },
+      y: {
+        display: true,
+        title: {
+          display: true,
+          text: '市值 (百万美元)',
+          font: {
+            size: 12,
+            weight: 'normal' as const,
+          },
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)',
+        },
+        ticks: {
+          font: {
+            size: 11,
+          },
+          callback: function(value: any) {
+            return `$${value}M`;
+          },
+        },
+      },
+    },
+  };
+
   const formatNumber = (n: number) => {
     if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)}B`;
     if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -199,38 +358,36 @@ const Stocks = () => {
     return `$${n}`;
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
   // 过滤和排序数据
-  const filteredAndSortedStocks = tokenizedStocks
+  const filteredStocks = tokenizedStocks
     .filter(stock => {
       const matchesSearch = stock.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           stock.issuer.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesSearch;
+                           stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           stock.underlyingAsset.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesFilter = filterBy === 'all' || stock.platform.toLowerCase().includes(filterBy.toLowerCase());
+      const matchesBlockchain = blockchainFilter === 'all' || stock.networks.some(network => 
+        network.toLowerCase().includes(blockchainFilter.toLowerCase())
+      );
+      return matchesSearch && matchesFilter && matchesBlockchain;
     })
     .sort((a, b) => {
       switch (sortBy) {
-        case 'market_cap':
-          return b.marketCap - a.marketCap;
-        case 'volume':
-          return b.volume24h - a.volume24h;
-        case 'change24h':
-          return b.change24h - a.change24h;
-        case 'name':
-          return a.name.localeCompare(b.name);
+        case 'totalValue':
+          return b.totalValue - a.totalValue;
+        case 'holders':
+          return b.holders - a.holders;
+        case 'monthlyTransferVolume':
+          return b.monthlyTransferVolume - a.monthlyTransferVolume;
+        case 'change30d':
+          return b.change30d - a.change30d;
         default:
           return 0;
       }
     });
-
-  // 获取变化颜色
-  const getChangeColor = (change: number) => {
-    return change >= 0 ? 'text-green-600' : 'text-red-600';
-  };
-
-  // 获取变化图标
-  const getChangeIcon = (change: number) => {
-    return change >= 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />;
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -238,167 +395,268 @@ const Stocks = () => {
       <div className="container mx-auto px-4 py-8">
         {/* 页面标题 */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">代币化股票</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">股票代币化列表</h1>
           <p className="text-gray-600">
-            追踪传统股票在区块链上的代币化版本，实现24/7交易和全球流动性
+            探索股票代币化世界，数字资产与上市公司公开股权的挂钩。深入了解我们的股票代币化综合分析。
           </p>
         </div>
 
-        {/* 统计概览 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* 总体统计指标 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">总市值</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-600">总价值</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-gray-900">
-                {formatNumber(tokenizedStocks.reduce((sum, stock) => sum + stock.marketCap, 0))}
+                {formatNumber(tokenizedStocks.reduce((sum, stock) => sum + stock.totalValue, 0))}
               </div>
-              <div className="text-sm text-gray-500">所有代币化股票</div>
+              <div className="text-sm text-green-600 flex items-center mt-1">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                +87.75% 较30天前
+              </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">24小时交易量</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-600">月度转账量</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-gray-900">
-                {formatVolume(tokenizedStocks.reduce((sum, stock) => sum + stock.volume24h, 0))}
+                {formatVolume(tokenizedStocks.reduce((sum, stock) => sum + stock.monthlyTransferVolume, 0))}
               </div>
-              <div className="text-sm text-gray-500">总交易量</div>
+              <div className="text-sm text-green-600 flex items-center mt-1">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                +11.23% 较30天前
+              </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">股票数量</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-600">月度活跃地址</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">{tokenizedStocks.length}</div>
-              <div className="text-sm text-gray-500">代币化股票</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {tokenizedStocks.reduce((sum, stock) => sum + stock.activeAddresses, 0).toLocaleString()}
+              </div>
+              <div className="text-sm text-red-600 flex items-center mt-1">
+                <TrendingDown className="w-4 h-4 mr-1" />
+                -26.40% 较30天前
+              </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">平均涨幅</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-600">持有者</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                +{(tokenizedStocks.reduce((sum, stock) => sum + stock.change24h, 0) / tokenizedStocks.length).toFixed(2)}%
+              <div className="text-2xl font-bold text-gray-900">
+                {tokenizedStocks.reduce((sum, stock) => sum + stock.holders, 0).toLocaleString()}
               </div>
-              <div className="text-sm text-gray-500">24小时平均</div>
+              <div className="text-sm text-green-600 flex items-center mt-1">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                +15.10% 较30天前
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* 搜索和筛选 */}
+        {/* 月度趋势图表 */}
         <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input
-                    placeholder="搜索股票名称、代码或发行商 (backed.fi, ondo.fi, dinari)..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-[140px]">
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="market_cap">按市值排序</SelectItem>
-                    <SelectItem value="volume">按交易量排序</SelectItem>
-                    <SelectItem value="change24h">按24h涨跌排序</SelectItem>
-                    <SelectItem value="name">按名称排序</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+          <CardHeader>
+            <CardTitle>股票代币化月度趋势</CardTitle>
+            <CardDescription>
+              不同平台的股票代币化市值增长趋势（百万美元）
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[400px]">
+              <Line data={chartData} options={chartOptions} />
             </div>
           </CardContent>
         </Card>
 
-        {/* 股票列表 */}
-        <Card>
+        {/* 平台排行榜 */}
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle>代币化股票列表</CardTitle>
-            <CardDescription>
-              显示 {filteredAndSortedStocks.length} 个代币化股票
-            </CardDescription>
+            <CardTitle>股票代币化平台排行榜</CardTitle>
+            <CardDescription>按总价值排序的平台表现</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">股票</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600">价格</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600">24h</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600">7d</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600">30d</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600">24h交易量</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600">市值</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">发行商</th>
+                    <th className="text-left py-3 px-4">排名</th>
+                    <th className="text-left py-3 px-4">平台</th>
+                    <th className="text-left py-3 px-4">RWA数量</th>
+                    <th className="text-left py-3 px-4">总价值</th>
+                    <th className="text-left py-3 px-4">30天变化</th>
+                    <th className="text-left py-3 px-4">市场份额</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredAndSortedStocks.map((stock) => (
+                  {platformStats.map((platform, index) => (
+                    <tr key={platform.platform} className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4 font-medium">{index + 1}</td>
+                      <td className="py-3 px-4 font-medium">{platform.platform}</td>
+                      <td className="py-3 px-4">{platform.count}</td>
+                      <td className="py-3 px-4">{formatNumber(platform.totalValue)}</td>
+                      <td className="py-3 px-4">
+                        <span className="text-green-600 flex items-center">
+                          <TrendingUp className="w-4 h-4 mr-1" />
+                          +4.21%
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">{platform.marketShare}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 股票代币化列表 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>股票代币化列表</CardTitle>
+            <CardDescription>
+              显示 {filteredStocks.length} 个结果，共 {tokenizedStocks.length} 个股票代币化产品
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {/* 搜索和筛选 */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="搜索股票、代码或底层资产..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="排序方式" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="totalValue">总价值</SelectItem>
+                      <SelectItem value="holders">持有者数量</SelectItem>
+                      <SelectItem value="monthlyTransferVolume">月度转账量</SelectItem>
+                      <SelectItem value="change30d">30天变化</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={filterBy} onValueChange={setFilterBy}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="筛选平台" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">所有平台</SelectItem>
+                      <SelectItem value="ondo">Ondo</SelectItem>
+                      <SelectItem value="backed">Backed Finance</SelectItem>
+                      <SelectItem value="securitize">Securitize</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={blockchainFilter} onValueChange={setBlockchainFilter}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="区块链网络" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">所有网络</SelectItem>
+                      <SelectItem value="ethereum">Ethereum</SelectItem>
+                      <SelectItem value="solana">Solana</SelectItem>
+                      <SelectItem value="bnb">BNB Chain</SelectItem>
+                      <SelectItem value="gnosis">Gnosis</SelectItem>
+                      <SelectItem value="avalanche">Avalanche</SelectItem>
+                      <SelectItem value="polygon">Polygon</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-3 px-4">名称</th>
+                    <th className="text-left py-3 px-4">代码</th>
+                    <th className="text-left py-3 px-4">平台</th>
+                    <th className="text-left py-3 px-4">网络</th>
+                    <th className="text-left py-3 px-4">总价值</th>
+                    <th className="text-left py-3 px-4">底层资产</th>
+                    <th className="text-left py-3 px-4">NAV</th>
+                    <th className="text-left py-3 px-4">持有者</th>
+                    <th className="text-left py-3 px-4">月度转账量</th>
+                    <th className="text-left py-3 px-4">30天变化</th>
+                    <th className="text-left py-3 px-4">合约地址</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStocks.map((stock) => (
                     <tr 
                       key={stock.id} 
-                      className="border-b hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="border-b hover:bg-gray-50 cursor-pointer"
                       onClick={() => navigate(`/tokenization/stocks/${stock.id}`)}
                     >
                       <td className="py-3 px-4">
-                        <div>
-                          <div className="font-medium text-gray-900">{stock.name}</div>
-                          <div className="text-sm text-gray-500">{stock.symbol}</div>
-                        </div>
+                        <div className="font-medium">{stock.name}</div>
+                        <div className="text-sm text-gray-500">{stock.issuer}</div>
                       </td>
-                      <td className="py-3 px-4 text-right font-medium text-gray-900">
-                        ${stock.price.toFixed(2)}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className={`flex items-center justify-end gap-1 ${getChangeColor(stock.change24h)}`}>
-                          {getChangeIcon(stock.change24h)}
-                          <span className="font-medium">
-                            {stock.change24h >= 0 ? '+' : ''}{stock.change24h.toFixed(2)}%
-                          </span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className={`flex items-center justify-end gap-1 ${getChangeColor(stock.change7d)}`}>
-                          {getChangeIcon(stock.change7d)}
-                          <span className="font-medium">
-                            {stock.change7d >= 0 ? '+' : ''}{stock.change7d.toFixed(2)}%
-                          </span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className={`flex items-center justify-end gap-1 ${getChangeColor(stock.change30d)}`}>
-                          {getChangeIcon(stock.change30d)}
-                          <span className="font-medium">
-                            {stock.change30d >= 0 ? '+' : ''}{stock.change30d.toFixed(2)}%
-                          </span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-right text-gray-900">
-                        {formatVolume(stock.volume24h)}
-                      </td>
-                      <td className="py-3 px-4 text-right text-gray-900">
-                        {formatNumber(stock.marketCap)}
+                      <td className="py-3 px-4 font-mono text-sm">{stock.ticker}</td>
+                      <td className="py-3 px-4">
+                        <Badge variant="secondary">{stock.platform}</Badge>
                       </td>
                       <td className="py-3 px-4">
-                        <Badge variant="secondary" className="text-xs">
-                          {stock.issuer}
-                        </Badge>
+                        <div className="flex flex-wrap gap-1">
+                          {stock.networks.map((network, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {network}
+                            </Badge>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 font-medium">{formatNumber(stock.totalValue)}</td>
+                      <td className="py-3 px-4 text-sm">{stock.underlyingAsset}</td>
+                      <td className="py-3 px-4">${stock.nav}</td>
+                      <td className="py-3 px-4">{stock.holders.toLocaleString()}</td>
+                      <td className="py-3 px-4">{formatVolume(stock.monthlyTransferVolume)}</td>
+                      <td className="py-3 px-4">
+                        <span className={`flex items-center ${
+                          stock.change30d >= 0 ? 'text-green-600' : 'text-red-600'
+                        }`}>
+                          {stock.change30d >= 0 ? (
+                            <TrendingUp className="w-4 h-4 mr-1" />
+                          ) : (
+                            <TrendingDown className="w-4 h-4 mr-1" />
+                          )}
+                          {stock.change30d >= 0 ? '+' : ''}{stock.change30d.toFixed(2)}%
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center space-x-2">
+                          <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                            {stock.contractAddress.slice(0, 6)}...{stock.contractAddress.slice(-4)}
+                          </code>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              copyToClipboard(stock.contractAddress);
+                            }}
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -408,32 +666,42 @@ const Stocks = () => {
           </CardContent>
         </Card>
 
-        {/* 关于代币化股票 */}
+        {/* 关于股票代币化 */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5" />
-              关于代币化股票
-            </CardTitle>
+            <CardTitle>关于股票代币化</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-medium text-gray-900 mb-2">什么是代币化股票？</h4>
-                <p className="text-sm text-gray-600">
-                  代币化股票是传统股票在区块链上的数字表示，允许投资者24/7交易传统股票，
-                  无需等待传统市场开盘时间。每个代币代表传统股票的一股。
+          <CardContent className="space-y-4">
+            <p className="text-gray-600">
+              股票代币化是将传统股票转换为区块链上的数字代币的过程。这些代币代表对底层股票的所有权，
+              使投资者能够以更小的金额投资于知名公司的股票，并享受区块链技术带来的透明度和流动性优势。
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Ondo Finance</h4>
+                <p className="text-sm text-blue-700">
+                  专注于机构级代币化证券，提供高流动性和实时定价的股票代币化产品。
                 </p>
               </div>
-              <div>
-                <h4 className="font-medium text-gray-900 mb-2">主要优势</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• 24/7 全天候交易</li>
-                  <li>• 全球流动性</li>
-                  <li>• 降低交易成本</li>
-                  <li>• 快速结算</li>
-                </ul>
+              <div className="p-4 bg-green-50 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Backed Finance</h4>
+                <p className="text-sm text-green-700">
+                  提供完全抵押的代币化股票，支持多个区块链网络，确保透明度和安全性。
+                </p>
               </div>
+              <div className="p-4 bg-purple-50 rounded-lg">
+                <h4 className="font-semibold text-purple-900 mb-2">Securitize</h4>
+                <p className="text-sm text-purple-700">
+                  合规的代币化平台，专注于传统证券的数字化，提供完整的监管框架支持。
+                </p>
+              </div>
+            </div>
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <h4 className="font-semibold text-yellow-900 mb-2">⚠️ 投资风险提示</h4>
+              <p className="text-sm text-yellow-800">
+                股票代币化投资涉及市场风险、流动性风险和技术风险。投资者应充分了解相关风险，
+                并根据自身风险承受能力做出投资决策。过往表现不代表未来收益。
+              </p>
             </div>
           </CardContent>
         </Card>

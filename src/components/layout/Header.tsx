@@ -111,6 +111,9 @@ const Header = () => {
                       <Link to="/tokenization/stocks" className="w-full cursor-pointer rounded-md px-2 py-2 font-semibold text-foreground bg-accent/40 hover:bg-accent hover:text-accent-foreground transition-colors">股票</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
+                      <Link to="/tokenization/stablecoins" className="w-full cursor-pointer rounded-md px-2 py-2 text-muted-foreground opacity-70 hover:opacity-100 hover:text-accent-foreground hover:bg-accent transition-colors">稳定币</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link to="/tokenization/funds" className="w-full cursor-pointer rounded-md px-2 py-2 text-muted-foreground opacity-70 hover:opacity-100 hover:text-accent-foreground hover:bg-accent transition-colors">基金</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
